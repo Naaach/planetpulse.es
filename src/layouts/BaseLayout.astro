@@ -3,13 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Planet Pulse — medidores ambientales globales en tiempo real. Datos claros del planeta." />
+
+    <title>Planet Pulse — Datos ambientales globales en tiempo real</title>
+    <meta name="description" content="Planet Pulse muestra medidores ambientales globales en tiempo real: temperatura, CO₂, calidad del aire por ciudad y más. Datos claros del planeta, actualizados." />
+    <meta name="keywords" content="cambio climático, calidad del aire, CO2, temperatura global, nivel del mar, energía renovable, índice UV, datos ambientales" />
     <meta name="theme-color" content="#f5f7fa" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Planet Pulse" />
+
+    <meta property="og:title" content="Planet Pulse — Estado del planeta en tiempo real" />
+    <meta property="og:description" content="Temperatura global, CO₂, calidad del aire por ciudad y más medidores ambientales actualizados en tiempo real." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://planetpulse.es" />
+    <meta property="og:locale" content="es_ES" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Planet Pulse — Estado del planeta en tiempo real" />
+    <meta name="twitter:description" content="Temperatura global, CO₂, calidad del aire por ciudad y más medidores ambientales actualizados en tiempo real." />
+
+    <link rel="canonical" href="https://planetpulse.es" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <title>Planet Pulse — Estado del planeta en tiempo real</title>
     <script>
       (function () {
         var lang = localStorage.getItem('planetpulse-lang');
@@ -94,6 +111,29 @@
           <span class="lang-es">Planet Pulse &mdash; Datos ambientales globales</span>
           <span class="lang-en">Planet Pulse &mdash; Global environmental data</span>
         </p>
+
+        <div class="mt-6">
+          <button data-contact-toggle class="inline-flex items-center gap-1.5 text-xs text-gray-300 hover:text-gray-500 transition-colors cursor-pointer">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            <span class="lang-es">Contacto</span>
+            <span class="lang-en">Contact</span>
+          </button>
+
+          <div data-contact-form class="hidden mt-4 max-w-md mx-auto">
+            <p data-contact-status class="text-xs text-gray-400 mb-2"></p>
+            <form class="flex flex-col sm:flex-row gap-2">
+              <input type="email" name="email" required placeholder="tu@email.com" class="flex-1 px-3 py-2 text-xs rounded-lg border border-gray-200 bg-white text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300" />
+              <textarea name="message" required placeholder="Mensaje / Message" rows="1" class="flex-1 px-3 py-2 text-xs rounded-lg border border-gray-200 bg-white text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 resize-none"></textarea>
+              <button type="submit" class="px-4 py-2 text-xs rounded-lg bg-gray-200 text-gray-600 hover:bg-gray-300 transition-colors shrink-0">
+                <span class="lang-es">Enviar</span>
+                <span class="lang-en">Send</span>
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
     </footer>
 
@@ -117,6 +157,36 @@
             });
           });
         });
+
+        var toggle = document.querySelector('[data-contact-toggle]');
+        var formWrap = document.querySelector('[data-contact-form]');
+        var statusEl = document.querySelector('[data-contact-status]');
+        if (toggle && formWrap) {
+          toggle.addEventListener('click', function () {
+            formWrap.classList.toggle('hidden');
+          });
+
+          formWrap.querySelector('form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            var form = e.target;
+            var data = { email: form.email.value, message: form.message.value, _subject: 'Planet Pulse - Contacto' };
+            statusEl.textContent = 'Enviando... / Sending...';
+            statusEl.className = 'text-xs text-gray-400 mb-2';
+            fetch('https://formsubmit.co/ajax/nach704@gmail.com', {
+              method: 'POST',
+              body: JSON.stringify(data),
+              headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+            }).then(function (r) { return r.json(); }).then(function () {
+              statusEl.textContent = 'Enviado! Gracias / Sent! Thank you';
+              statusEl.className = 'text-xs text-green-600 mb-2';
+              form.reset();
+            }).catch(function () {
+              var es = document.documentElement.lang === 'es';
+              statusEl.textContent = es ? 'Error al enviar. Intenta de nuevo.' : 'Send error. Try again.';
+              statusEl.className = 'text-xs text-red-500 mb-2';
+            });
+          });
+        }
       });
     </script>
   </body>

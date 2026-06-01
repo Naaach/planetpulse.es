@@ -179,6 +179,9 @@ function applyCityCards(name) {
 }
 
 function initCitySelector() {
+  renderCityChips(CITIES[0].name);
+  setActiveCity(CITIES[0].name);
+
   if ('geolocation' in navigator) {
     navigator.geolocation.getCurrentPosition(
       pos => {
@@ -186,15 +189,9 @@ function initCitySelector() {
         renderCityChips(nearest.name);
         setActiveCity(nearest.name);
       },
-      () => {
-        renderCityChips(CITIES[0].name);
-        setActiveCity(CITIES[0].name);
-      },
+      () => {},
       { timeout: 5000, enableHighAccuracy: false }
     );
-  } else {
-    renderCityChips(CITIES[0].name);
-    setActiveCity(CITIES[0].name);
   }
 }
 
