@@ -1,0 +1,259 @@
+---
+import Medidor from './Medidor.astro';
+
+const medidores = [
+  {
+    tituloES: 'Calidad del aire (AQI)',
+    tituloEN: 'Air Quality Index (AQI)',
+    tooltipES: 'Calidad general del aire basada en part\u00edculas finas (PM2.5, PM10), ozono, NO\u2082, CO y SO\u2082',
+    tooltipEN: 'Overall air quality based on fine particulates (PM2.5, PM10), ozone, NO\u2082, CO and SO\u2082',
+    valor: '42',
+    unidad: 'AQI',
+    tendencia: 'stable',
+    porcentaje: null,
+    trendText: 'Moderado / Moderate',
+    color: 'neutral',
+    icono:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M3 12h14"/><path d="M21 12h-2"/><path d="M3 16h10"/><path d="M17 16h2"/><path d="M3 8h18"/></svg>',
+    fuenteES: 'Open-Meteo / CAMS (Copernicus Atmosphere Monitoring Service)',
+    fuenteEN: 'Open-Meteo / CAMS (Copernicus Atmosphere Monitoring Service)',
+    rangoHistoricoES: 'Tiempo real (actualizaci\u00f3n horaria)',
+    rangoHistoricoEN: 'Real-time (hourly updates)',
+    detalleTecnicoES:
+      'El \u00cdndice Europeo de Calidad del Aire (EAQI) clasifica la calidad del aire en 5 niveles desde Buena hasta Muy Mala, basado en concentraciones de PM2.5, PM10, O\u2083, NO\u2082 y SO\u2082.',
+    detalleTecnicoEN:
+      'The European Air Quality Index (EAQI) rates air quality in 5 levels from Good to Very Poor, based on PM2.5, PM10, O\u2083, NO\u2082 and SO\u2082 concentrations.',
+    notaES:
+      'Los datos provienen del servicio CAMS de Copernicus, que combina mediciones de suelo con modelado atmosf\u00e9rico.',
+    notaEN:
+      'Data comes from the CAMS Copernicus service, combining ground measurements with atmospheric modeling.',
+    actualizacionES: 'Horaria (Open-Meteo)',
+    actualizacionEN: 'Hourly (Open-Meteo)',
+  },
+  {
+    tituloES: '\u00cdndice UV',
+    tituloEN: 'UV Index',
+    tooltipES: 'Radiaci\u00f3n ultravioleta solar a nivel del suelo',
+    tooltipEN: 'Solar ultraviolet radiation at ground level',
+    valor: '6.2',
+    unidad: '',
+    tendencia: 'stable',
+    porcentaje: null,
+    trendText: 'Moderado / Moderate',
+    color: 'neutral',
+    icono:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>',
+    fuenteES: 'Open-Meteo / CAMS (Copernicus Atmosphere Monitoring Service)',
+    fuenteEN: 'Open-Meteo / CAMS (Copernicus Atmosphere Monitoring Service)',
+    rangoHistoricoES: 'Tiempo real (actualizaci\u00f3n horaria)',
+    rangoHistoricoEN: 'Real-time (hourly updates)',
+    detalleTecnicoES:
+      'El \u00edndice UV mide la intensidad de la radiaci\u00f3n ultravioleta del sol en la superficie terrestre. Escala: 0-2 Bajo, 3-5 Moderado, 6-7 Alto, 8-10 Muy alto, 11+ Extremo.',
+    detalleTecnicoEN:
+      'The UV Index measures solar ultraviolet radiation intensity at ground level. Scale: 0-2 Low, 3-5 Moderate, 6-7 High, 8-10 Very High, 11+ Extreme.',
+    notaES:
+      'La exposici\u00f3n a rayos UV var\u00eda seg\u00fan la hora del d\u00eda, nubosidad, altitud y capa de ozono.',
+    notaEN:
+      'UV exposure varies by time of day, cloud cover, altitude, and ozone layer.',
+    actualizacionES: 'Horaria (Open-Meteo)',
+    actualizacionEN: 'Hourly (Open-Meteo)',
+  },
+  {
+    tituloES: 'Temperatura global',
+    tituloEN: 'Global Temperature',
+    tooltipES: 'Anomal\u00eda respecto a la media del periodo 1951\u20131980',
+    tooltipEN: 'Anomaly relative to the 1951\u20131980 average',
+    valor: '+1.18',
+    unidad: '\u00b0C',
+    tendencia: 'up',
+    porcentaje: 0.03,
+    color: 'malo',
+    icono:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>',
+    fuenteES: 'NASA Goddard Institute for Space Studies (GISS)',
+    fuenteEN: 'NASA Goddard Institute for Space Studies (GISS)',
+    rangoHistoricoES: '1880 \u2013 2026',
+    rangoHistoricoEN: '1880 \u2013 2026',
+    detalleTecnicoES:
+      'Anomal\u00eda de temperatura media global respecto a la media del periodo 1951\u20131980. Los datos combinan estaciones meteorol\u00f3gicas, boyas oce\u00e1nicas y mediciones satelitales.',
+    detalleTecnicoEN:
+      'Global mean temperature anomaly relative to the 1951\u20131980 average. Data combines weather stations, ocean buoys, and satellite measurements.',
+    notaES:
+      'El calentamiento observado es consistente con el aumento de gases de efecto invernadero por actividad humana.',
+    notaEN:
+      'The observed warming is consistent with the increase in greenhouse gases from human activity.',
+    actualizacionES: 'Mensual',
+    actualizacionEN: 'Monthly',
+  },
+  {
+    tituloES: 'CO\u2082 atmosf\u00e9rico',
+    tituloEN: 'Atmospheric CO\u2082',
+    tooltipES: 'Concentraci\u00f3n en la atm\u00f3sfera terrestre',
+    tooltipEN: 'Concentration in Earth\u2019s atmosphere',
+    valor: '424.6',
+    unidad: 'ppm',
+    tendencia: 'up',
+    porcentaje: 2.3,
+    color: 'malo',
+    icono:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><circle cx="6" cy="11" r="2"/><circle cx="18" cy="11" r="2"/><circle cx="12" cy="18" r="2.5"/><line x1="8" y1="12" x2="10.5" y2="16.5"/><line x1="16" y1="12" x2="13.5" y2="16.5"/></svg>',
+    fuenteES: 'NOAA Global Monitoring Laboratory (Mauna Loa)',
+    fuenteEN: 'NOAA Global Monitoring Laboratory (Mauna Loa)',
+    rangoHistoricoES: '1958 \u2013 2026',
+    rangoHistoricoEN: '1958 \u2013 2026',
+    detalleTecnicoES:
+      'Concentraci\u00f3n media mensual de di\u00f3xido de carbono en la atm\u00f3sfera medida en el observatorio de Mauna Loa, Haw\u00e1i (Curva de Keeling).',
+    detalleTecnicoEN:
+      'Monthly mean carbon dioxide concentration measured at the Mauna Loa Observatory, Hawaii (Keeling Curve).',
+    notaES:
+      'El nivel actual es el m\u00e1s alto en al menos 800.000 a\u00f1os seg\u00fan registros de n\u00facleos de hielo.',
+    notaEN:
+      'Current levels are the highest in at least 800,000 years according to ice core records.',
+    actualizacionES: 'Mensual',
+    actualizacionEN: 'Monthly',
+  },
+  {
+    tituloES: 'Nivel del mar',
+    tituloEN: 'Sea Level Rise',
+    tooltipES: 'Incremento acumulado desde 1993',
+    tooltipEN: 'Accumulated rise since 1993',
+    valor: '112',
+    unidad: 'mm',
+    tendencia: 'up',
+    porcentaje: null,
+    trendText: '+3.6 mm/a\u00f1o',
+    color: 'malo',
+    icono:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M2 16c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/></svg>',
+    fuenteES: 'NASA / NOAA Satellite Sea Level Observation',
+    fuenteEN: 'NASA / NOAA Satellite Sea Level Observation',
+    rangoHistoricoES: '1993 \u2013 2026 (altimetr\u00eda satelital)',
+    rangoHistoricoEN: '1993 \u2013 2026 (satellite altimetry)',
+    detalleTecnicoES:
+      'Aumento del nivel medio global del mar respecto a la referencia de 1993. Medido mediante alt\u00edmetros satelitales (TOPEX/Poseidon, Jason, Sentinel).',
+    detalleTecnicoEN:
+      'Global mean sea level rise relative to the 1993 reference. Measured by satellite altimeters (TOPEX/Poseidon, Jason, Sentinel).',
+    notaES:
+      'El aumento se debe principalmente a la expansi\u00f3n t\u00e9rmica del oc\u00e9ano y al derretimiento de glaciares y capas de hielo.',
+    notaEN:
+      'Rise is driven mainly by thermal expansion of the ocean and melting of glaciers and ice sheets.',
+    actualizacionES: 'Trimestral',
+    actualizacionEN: 'Quarterly',
+  },
+  {
+    tituloES: 'Energ\u00eda renovable',
+    tituloEN: 'Renewable Energy',
+    tooltipES: 'Porcentaje del mix el\u00e9ctrico global',
+    tooltipEN: 'Share of global electricity generation',
+    valor: '38.2',
+    unidad: '%',
+    tendencia: 'up',
+    porcentaje: 2.1,
+    color: 'bueno',
+    icono:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M11 20A7 7 0 0 1 9.8 6.8C11.5 5.2 14 4 17 4c0 3-1.2 5.5-2.8 7.2A7 7 0 0 1 11 20z"/><path d="M17 4c0 3-1.2 5.5-2.8 7.2"/></svg>',
+    fuenteES: 'International Energy Agency (IEA) / IRENA',
+    fuenteEN: 'International Energy Agency (IEA) / IRENA',
+    rangoHistoricoES: '2000 \u2013 2026',
+    rangoHistoricoEN: '2000 \u2013 2026',
+    detalleTecnicoES:
+      'Porcentaje de la generaci\u00f3n el\u00e9ctrica global proveniente de fuentes renovables (hidroel\u00e9ctrica, e\u00f3lica, solar, biomasa, geot\u00e9rmica).',
+    detalleTecnicoEN:
+      'Percentage of global electricity generation from renewable sources (hydro, wind, solar, biomass, geothermal).',
+    notaES:
+      'El crecimiento se acelera gracias al abaratamiento de la solar fotovoltaica y la e\u00f3lica, que ya compiten con combustibles f\u00f3siles sin subsidios.',
+    notaEN:
+      'Growth is accelerating due to falling costs of solar PV and wind, which already compete with fossil fuels without subsidies.',
+    actualizacionES: 'Anual',
+    actualizacionEN: 'Yearly',
+  },
+  {
+    tituloES: 'Huella de carbono per c\u00e1pita',
+    tituloEN: 'Carbon Footprint per Capita',
+    tooltipES: 'Emisiones promedio por persona al a\u00f1o',
+    tooltipEN: 'Average emissions per person per year',
+    valor: '4.7',
+    unidad: 'tCO\u2082e/a\u00f1o',
+    tendencia: 'stable',
+    porcentaje: -0.1,
+    color: 'neutral',
+    icono:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><ellipse cx="9" cy="7.5" rx="3" ry="2.5"/><ellipse cx="15" cy="7.5" rx="3" ry="2.5"/><path d="M5 16c0-2 1.5-3 3-4"/><path d="M19 16c0-2-1.5-3-3-4"/></svg>',
+    fuenteES: 'Global Carbon Project / World Bank',
+    fuenteEN: 'Global Carbon Project / World Bank',
+    rangoHistoricoES: '1990 \u2013 2026',
+    rangoHistoricoEN: '1990 \u2013 2026',
+    detalleTecnicoES:
+      'Emisiones medias de CO\u2082 equivalente por persona a nivel global. Incluye combustibles f\u00f3siles, cambio de uso del suelo y procesos industriales.',
+    detalleTecnicoEN:
+      'Average CO\u2082 equivalent emissions per person globally. Includes fossil fuels, land-use change, and industrial processes.',
+    notaES:
+      'Existen grandes desigualdades regionales: la huella per c\u00e1pita de pa\u00edses como EE.UU. duplica ampliamente el promedio global.',
+    notaEN:
+      'Large regional inequalities exist: the per-capita footprint of countries like the US far exceeds the global average.',
+    actualizacionES: 'Anual',
+    actualizacionEN: 'Yearly',
+  },
+  {
+    tituloES: 'Deforestaci\u00f3n anual',
+    tituloEN: 'Annual Deforestation',
+    tooltipES: 'P\u00e9rdida neta de bosque a nivel global',
+    tooltipEN: 'Net global forest loss per year',
+    valor: '4.1',
+    unidad: 'Mha/a\u00f1o',
+    tendencia: 'down',
+    porcentaje: -0.3,
+    color: 'bueno',
+    icono:
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><path d="M12 2L6 10h3v6h6v-6h3z"/><path d="M12 16v4"/></svg>',
+    fuenteES: 'FAO Global Forest Resources Assessment',
+    fuenteEN: 'FAO Global Forest Resources Assessment',
+    rangoHistoricoES: '1990 \u2013 2026',
+    rangoHistoricoEN: '1990 \u2013 2026',
+    detalleTecnicoES:
+      'P\u00e9rdida neta de superficie forestal a nivel global medida en millones de hect\u00e1reas por a\u00f1o. Incluye bosques primarios, secundarios y plantaciones.',
+    detalleTecnicoEN:
+      'Net global forest area loss measured in millions of hectares per year. Includes primary, secondary forests and plantations.',
+    notaES:
+      'La desaceleraci\u00f3n refleja pol\u00edticas de conservaci\u00f3n y restauraci\u00f3n, aunque la Amazon\u00eda y el Sudeste Asi\u00e1tico siguen siendo focos cr\u00edticos de p\u00e9rdida.',
+    notaEN:
+      'The slowdown reflects conservation and restoration policies, though the Amazon and Southeast Asia remain critical hotspots.',
+    actualizacionES: 'Anual',
+    actualizacionEN: 'Yearly',
+  },
+];
+---
+
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6">
+  {medidores.map((m, i) => (
+    <Medidor
+      tituloES={m.tituloES}
+      tituloEN={m.tituloEN}
+      tooltipES={m.tooltipES}
+      tooltipEN={m.tooltipEN}
+      valor={m.valor}
+      unidad={m.unidad}
+      tendencia={m.tendencia}
+      porcentaje={m.porcentaje}
+      trendText={m.trendText}
+      icono={m.icono}
+      fuenteES={m.fuenteES}
+      fuenteEN={m.fuenteEN}
+      rangoHistoricoES={m.rangoHistoricoES}
+      rangoHistoricoEN={m.rangoHistoricoEN}
+      detalleTecnicoES={m.detalleTecnicoES}
+      detalleTecnicoEN={m.detalleTecnicoEN}
+      notaES={m.notaES}
+      notaEN={m.notaEN}
+      actualizacionES={m.actualizacionES}
+      actualizacionEN={m.actualizacionEN}
+      color={m.color}
+      index={i}
+    />
+  ))}
+</div>
+
+<script>
+  import { initDataUpdater } from '../services/data-updater';
+  initDataUpdater();
+</script>
