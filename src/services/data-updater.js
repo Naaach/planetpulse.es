@@ -293,7 +293,7 @@ export async function refreshAllData() {
     refreshBtn.textContent = '...';
   }
 
-  const proxyUrl = import.meta.env.PUBLIC_API_PROXY;
+  const proxyUrl = import.meta.env.PUBLIC_API_PROXY || '/api/data';
   let proxyOk = false;
 
   if (proxyUrl) {
