@@ -4,11 +4,11 @@ import { CITIES } from './cities';
 const COLORS = {
   bueno: { badge: ['bg-green-100', 'text-green-700'], text: 'text-green-700' },
   malo: { badge: ['bg-red-100', 'text-red-600'], text: 'text-red-600' },
-  neutral: { badge: ['bg-gray-100', 'text-gray-500'], text: 'text-gray-500' },
+  neutral: { badge: ['bg-stone-100', 'text-stone-500'], text: 'text-stone-500' },
 };
 
-const ALL_BADGE_CLASSES = ['bg-green-100', 'bg-red-100', 'bg-gray-100', 'text-green-700', 'text-red-600', 'text-gray-500'];
-const ALL_TEXT_CLASSES = ['text-green-700', 'text-red-600', 'text-gray-500'];
+const ALL_BADGE_CLASSES = ['bg-green-100', 'bg-red-100', 'bg-stone-100', 'text-green-700', 'text-red-600', 'text-stone-500'];
+const ALL_TEXT_CLASSES = ['text-green-700', 'text-red-600', 'text-stone-500'];
 
 let activeCity = null;
 let cityData = null;
@@ -56,7 +56,7 @@ function setLiveIndicator(index, success) {
     el.textContent = success ? '●' : '○';
     el.className = success
       ? 'w-2 h-2 rounded-full bg-green-500 inline-block shrink-0'
-      : 'w-2 h-2 rounded-full bg-gray-300 inline-block shrink-0';
+      : 'w-2 h-2 rounded-full bg-stone-300 inline-block shrink-0';
   }
 }
 
@@ -287,7 +287,7 @@ export async function refreshAllData() {
   const refreshBtn = document.querySelector('[data-refresh-btn]');
   if (refreshBtn) {
     refreshBtn.disabled = true;
-    refreshBtn.textContent = '...';
+    refreshBtn.classList.add('is-loading');
   }
 
   const proxyUrl = import.meta.env.PUBLIC_API_PROXY || '/api/data';
@@ -317,7 +317,7 @@ export async function refreshAllData() {
 
   if (refreshBtn) {
     refreshBtn.disabled = false;
-    refreshBtn.textContent = '';
+    refreshBtn.classList.remove('is-loading');
   }
 
   refreshing = false;

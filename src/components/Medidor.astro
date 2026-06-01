@@ -30,23 +30,23 @@ const etiquetaEN = tendencia === 'up' ? 'Rising' : tendencia === 'down' ? 'Decli
 const porcentajeDisplay = trendText || (porcentaje >= 0 ? `+${porcentaje}%` : `${porcentaje}%`);
 
 const colorMap = {
-  bueno: { bg: 'bg-green-50', text: 'text-green-700', badge: 'bg-green-100 text-green-700' },
-  malo: { bg: 'bg-red-50', text: 'text-red-600', badge: 'bg-red-100 text-red-600' },
-  neutral: { bg: 'bg-gray-50', text: 'text-gray-500', badge: 'bg-gray-100 text-gray-500' },
+  bueno: { text: 'text-green-700', badge: 'bg-green-100 text-green-700' },
+  malo: { text: 'text-red-600', badge: 'bg-red-100 text-red-600' },
+  neutral: { text: 'text-stone-500', badge: 'bg-stone-100 text-stone-500' },
 };
 const c = colorMap[color] || colorMap.neutral;
 ---
 
-<article class="medidor-card bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 p-6 sm:p-8 animate-fade-in" data-medidor-index={index}>
+<article class="medidor-card bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 p-6 sm:p-8 animate-fade-in opacity-0 border border-[#e5ddd3]/40" data-medidor-index={index} style={`animation-delay: ${index * 0.08}s`}>
   <div class="flex items-center gap-3 mb-4">
-    <span class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 text-gray-500 shrink-0" aria-hidden="true">
+    <span class="w-10 h-10 flex items-center justify-center rounded-xl bg-[#f0ece4] text-[#5c5042] shrink-0" aria-hidden="true">
       <Fragment set:html={icono} />
     </span>
-    <h2 class="text-base sm:text-lg font-semibold text-gray-800 flex items-center gap-2">
+    <h2 class="text-base sm:text-lg font-semibold text-[#1c1c28] flex items-center gap-2">
       <span class="lang-es">{tituloES}</span>
       <span class="lang-en">{tituloEN}</span>
       <span class="tooltip-trigger" tabindex="0" role="tooltip" aria-label={tooltipES}>
-        <svg class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg class="w-4 h-4 text-stone-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="10"/>
           <line x1="12" y1="16" x2="12" y2="12"/>
           <line x1="12" y1="8" x2="12.01" y2="8"/>
@@ -61,9 +61,9 @@ const c = colorMap[color] || colorMap.neutral;
 
   <div class="mb-1">
     <span class="inline-flex items-center gap-2">
-      <span class="text-4xl sm:text-5xl font-bold text-gray-900 tabular-nums tracking-tight" data-medidor-value>{valor}</span>
-      <span class="text-base sm:text-lg font-medium text-gray-400 ml-1">{unidad}</span>
-      <span data-live-dot class="w-2 h-2 rounded-full bg-gray-300 inline-block shrink-0" aria-hidden="true"></span>
+      <span class="text-4xl sm:text-5xl font-bold text-[#1c1c28] tabular-nums tracking-tight" data-medidor-value>{valor}</span>
+      <span class="text-base sm:text-lg font-medium text-stone-500 ml-1">{unidad}</span>
+      <span data-live-dot class="w-2 h-2 rounded-full bg-stone-300 inline-block shrink-0" aria-hidden="true"></span>
     </span>
   </div>
 
@@ -77,7 +77,7 @@ const c = colorMap[color] || colorMap.neutral;
   </div>
 
   <button
-    class="tech-toggle w-full flex items-center gap-2 text-sm font-medium text-gray-400 hover:text-gray-700 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-300 rounded-lg py-2"
+    class="tech-toggle w-full flex items-center gap-2 text-sm font-medium text-stone-500 hover:text-[#5c5042] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2d6a4f]/40 rounded-lg py-2"
     aria-expanded="false"
     aria-controls={`tech-data-${index}`}
     type="button"
@@ -90,57 +90,57 @@ const c = colorMap[color] || colorMap.neutral;
   </button>
 
   <div id={`tech-data-${index}`} class="tech-content" role="region" aria-label={`Detalle técnico de ${tituloES}`}>
-    <div class="pt-5 border-t border-gray-100 space-y-4">
+    <div class="pt-5 border-t border-[#e5ddd3] space-y-4">
       <div>
-        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+        <span class="text-xs font-semibold text-stone-500 uppercase tracking-wider">
           <span class="lang-es">Fuente</span>
           <span class="lang-en">Source</span>
         </span>
-        <p class="text-sm text-gray-700 mt-0.5 leading-relaxed">
+        <p class="text-sm text-[#5c5042] mt-0.5 leading-relaxed">
           <span class="lang-es">{fuenteES}</span>
           <span class="lang-en">{fuenteEN}</span>
         </p>
       </div>
       <div>
-        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+        <span class="text-xs font-semibold text-stone-500 uppercase tracking-wider">
           <span class="lang-es">Rango hist&oacute;rico</span>
           <span class="lang-en">Historical range</span>
         </span>
-        <p class="text-sm text-gray-700 mt-0.5">
+        <p class="text-sm text-[#5c5042] mt-0.5">
           <span class="lang-es">{rangoHistoricoES}</span>
           <span class="lang-en">{rangoHistoricoEN}</span>
         </p>
       </div>
       <div>
-        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+        <span class="text-xs font-semibold text-stone-500 uppercase tracking-wider">
           <span class="lang-es">Detalle t&eacute;cnico</span>
           <span class="lang-en">Technical detail</span>
         </span>
-        <p class="text-sm text-gray-700 mt-0.5 leading-relaxed">
+        <p class="text-sm text-[#5c5042] mt-0.5 leading-relaxed">
           <span class="lang-es">{detalleTecnicoES}</span>
           <span class="lang-en">{detalleTecnicoEN}</span>
         </p>
       </div>
       <div>
-        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+        <span class="text-xs font-semibold text-stone-500 uppercase tracking-wider">
           <span class="lang-es">Nota</span>
           <span class="lang-en">Note</span>
         </span>
-        <p class="text-sm text-gray-500 mt-0.5 leading-relaxed">
+        <p class="text-sm text-stone-500 mt-0.5 leading-relaxed">
           <span class="lang-es">{notaES}</span>
           <span class="lang-en">{notaEN}</span>
         </p>
       </div>
       <div>
-        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+        <span class="text-xs font-semibold text-stone-500 uppercase tracking-wider">
           <span class="lang-es">Actualizaci&oacute;n</span>
           <span class="lang-en">Update frequency</span>
         </span>
-        <p class="text-sm text-gray-700 mt-0.5">
+        <p class="text-sm text-[#5c5042] mt-0.5">
           <span class="lang-es">{actualizacionES}</span>
           <span class="lang-en">{actualizacionEN}</span>
         </p>
-        <p class="text-xs text-gray-400 mt-0.5" data-card-timestamp></p>
+        <p class="text-xs text-stone-500 mt-0.5" data-card-timestamp></p>
       </div>
     </div>
   </div>

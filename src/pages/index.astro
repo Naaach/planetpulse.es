@@ -5,35 +5,28 @@ import MedidorGrid from '../components/MedidorGrid.astro';
 
 <BaseLayout>
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-    <header class="text-center mb-6 sm:mb-10">
-      <div class="flex justify-center mb-4">
-        <div class="inline-flex items-center gap-1 p-0.5 rounded-lg bg-gray-100" role="group" aria-label="Language">
-          <button data-lang-btn="es" class="lang-btn text-gray-500 hover:text-gray-800 hover:bg-white active:bg-white active:text-gray-900 active:shadow-sm" aria-pressed="true">ES</button>
-          <button data-lang-btn="en" class="lang-btn text-gray-500 hover:text-gray-800 hover:bg-white active:bg-white active:text-gray-900 active:shadow-sm" aria-pressed="false">EN</button>
+    <header class="text-center mb-10 sm:mb-14">
+      <div class="flex justify-center mb-5">
+        <div class="inline-flex items-center gap-1 p-0.5 rounded-xl bg-[#e5ddd3]/50 border border-[#e5ddd3]/60" role="group" aria-label="Language">
+          <button data-lang-btn="es" class="lang-btn" aria-pressed="true">ES</button>
+          <button data-lang-btn="en" class="lang-btn" aria-pressed="false">EN</button>
         </div>
-        <style>
-          .lang-btn.active {
-            background: #fff;
-            color: #111827;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-            border-color: #e5e7eb;
-          }
-        </style>
       </div>
 
-      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight">
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-normal text-[#1c1c28] tracking-tight font-heading">
         <span class="lang-es">Planeta en tiempo real</span>
         <span class="lang-en">Planet in Real Time</span>
       </h1>
-      <p class="mt-3 text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto font-light">
+      <div class="w-12 h-0.5 bg-gradient-to-r from-leaf-700 via-[#d4a373] to-transparent mx-auto mt-4 mb-4 rounded-full"></div>
+      <p class="text-base sm:text-lg text-stone-500 max-w-2xl mx-auto font-light leading-relaxed">
         <span class="lang-es">Datos ambientales globales actualizados: temperatura, CO₂, calidad del aire por ciudad y más indicadores climáticos en directo.</span>
         <span class="lang-en">Real-time global environmental data: temperature, CO₂, city air quality and more climate indicators live.</span>
       </p>
     </header>
 
-    <div class="bg-blue-50/70 border border-blue-100 rounded-xl px-4 py-3 mb-8 sm:mb-10 text-sm text-blue-700" role="note" aria-label="Information">
+    <div class="bg-[#efe9de]/80 border border-[#ddd6cc] rounded-xl px-4 py-3 mb-10 sm:mb-12 text-sm text-[#5c5042]" role="note" aria-label="Information">
       <p class="flex items-start gap-2.5">
-        <svg class="w-5 h-5 mt-0.5 shrink-0 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg class="w-5 h-5 mt-0.5 shrink-0 text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="10"/>
           <line x1="12" y1="12" x2="12" y2="16"/>
           <line x1="12" y1="8" x2="12.01" y2="8"/>
@@ -45,30 +38,31 @@ import MedidorGrid from '../components/MedidorGrid.astro';
       </p>
     </div>
 
-    <div class="mb-6 sm:mb-8">
-      <div class="flex items-center justify-center gap-2 text-sm text-gray-500 mb-3">
-        <span class="lang-es">📍 Ciudad:</span>
-        <span class="lang-en">📍 City:</span>
-        <span data-city-label class="font-semibold text-gray-700">—</span>
+    <div class="mb-8 sm:mb-10">
+      <div class="flex items-center justify-center gap-2 text-sm text-stone-500 mb-3">
+        <span aria-hidden="true" style="font-size: 0.9rem;">🗺</span>
+        <span class="lang-es font-medium text-[#5c5042]">Ciudad:</span>
+        <span class="lang-en font-medium text-[#5c5042]">City:</span>
+        <span data-city-label class="font-semibold text-[#1c1c28]">—</span>
       </div>
       <div data-city-chips class="city-chips"></div>
     </div>
 
-    <div class="flex items-center justify-center gap-3 mb-6 sm:mb-8">
+    <div class="flex items-center justify-center gap-3 mb-8 sm:mb-10">
       <button
         data-refresh-btn
-        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gray-100 text-gray-500 text-sm font-medium hover:bg-gray-200 hover:text-gray-700 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-300"
+        class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#1c1c28] text-white text-sm font-medium hover:bg-[#3d352c] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2d6a4f] shadow-sm"
         type="button"
         aria-label="Refresh data"
       >
-        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg class="w-4 h-4 refresh-icon" data-refresh-icon viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <polyline points="23 4 23 10 17 10"/>
           <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
         </svg>
         <span class="lang-es">Actualizar</span>
         <span class="lang-en">Refresh</span>
       </button>
-      <span class="text-xs text-gray-400" data-last-update></span>
+      <span class="text-xs text-stone-500" data-last-update></span>
     </div>
 
     <MedidorGrid />
@@ -88,9 +82,9 @@ import MedidorGrid from '../components/MedidorGrid.astro';
     border-radius: 9999px;
     font-size: 0.8rem;
     font-weight: 500;
-    background: #f0f1f3;
-    color: #374151;
-    border: 1px solid #e2e4e8;
+    background: #eae6e0;
+    color: #5c5042;
+    border: 1px solid #ddd6cc;
     cursor: pointer;
     transition: all 0.15s ease;
     white-space: nowrap;
@@ -101,15 +95,15 @@ import MedidorGrid from '../components/MedidorGrid.astro';
     gap: 0.3rem;
   }
   .city-chip:hover {
-    background: #e5e7eb;
-    border-color: #c4c8ce;
+    background: #ddd6cc;
+    border-color: #ccc2b5;
     box-shadow: 0 2px 6px rgba(0,0,0,0.07);
   }
   .city-chip.active {
-    background: #111827;
+    background: #2d6a4f;
     color: #fff;
-    border-color: #111827;
-    box-shadow: 0 2px 8px rgba(17,24,39,0.25);
+    border-color: #2d6a4f;
+    box-shadow: 0 2px 8px rgba(45,106,79,0.3);
   }
   .city-chip .chip-flag {
     font-size: 1em;
