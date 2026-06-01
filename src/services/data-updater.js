@@ -1,4 +1,4 @@
-import { fetchAirQuality, fetchGlobalTemperature, fetchGlobalCO2 } from './api';
+import { fetchAirQuality, fetchGlobalTemperature, fetchGlobalCO2, fetchRenewableEnergy, fetchDeforestation } from './api';
 import { CITIES } from './cities';
 
 const COLORS = {
@@ -195,7 +195,7 @@ function initCitySelector() {
   }
 }
 
-function applyDirectResults(aqiResult, tempResult, co2Result) {
+function applyDirectResults(aqiResult, tempResult, co2Result, renewableResult, deforestationResult) {
   if (aqiResult.status === 'fulfilled') {
     const d = aqiResult.value;
     const current = d.current;
@@ -227,49 +227,125 @@ function applyDirectResults(aqiResult, tempResult, co2Result) {
         { name: cityName, aqi: aqi ? Math.round(aqi) : null, uv: uv != null ? Number(Number(uv).toFixed(1)) : null, temp: null }
       ];
     }
-  } else {
-    setLiveIndicator(6, false);
-    setLiveIndicator(7, false);
   }
 
   if (tempResult.status === 'fulfilled') {
     const t = tempResult.value;
-    const sign = t.anomaly >= 0 ? '+' : '';
-    updateCardValue(2, `${sign}${Number(t.anomaly).toFixed(2)}`);
-    updateCardTimestamp(2);
-    setLiveIndicator(2, true);
+    if (t.land != null) {
+      const sign = t.land >= 0 ? '+' : '';
+      updateCardValue(2, `${sign}${Number(t.land).toFixed(2)}`);
+      updateCardTimestamp(2);
+      setLiveIndicator(2, true);
+    } else {
+      updateCardValue(2, '—');
+      setLiveIndicator(2, false);
+    }
+    if (t.ocean != null) {
+      const sign = t.ocean >= 0 ? '+' : '';
+      updateCardValue(3, `${sign}${Number(t.ocean).toFixed(2)}`);
+      updateCardTimestamp(3);
+      setLiveIndicator(3, true);
+    } else {
+      updateCardValue(3, '—');
+      setLiveIndicator(3, false);
+    }
   } else {
     setLiveIndicator(2, false);
+    setLiveIndicator(3, false);
   }
 
   if (co2Result.status === 'fulfilled') {
     const c = co2Result.value;
-    updateCardValue(3, Number(c.ppm).toFixed(1));
-    updateCardTimestamp(3);
-    setLiveIndicator(3, true);
+    updateCardValue(4, Number(c.ppm).toFixed(1));
+    updateCardTimestamp(4);
+    setLiveIndicator(4, true);
   } else {
-    setLiveIndicator(3, false);
+    setLiveIndicator(4, false);
+  }
+
+  updateCardValue(5, '\u2014');
+  setLiveIndicator(5, false);
+
+  if (renewableResult?.status === 'fulfilled') {
+    const r = renewableResult.value;
+    updateCardValue(6, Number(r.pct).toFixed(1));
+    updateCardTimestamp(6);
+    setLiveIndicator(6, true);
+  } else {
+    setLiveIndicator(6, false);
+  }
+
+  updateCardValue(7, '\u2014');
+  setLiveIndicator(7, false);
+
+  if (deforestationResult?.status === 'fulfilled') {
+    const d = deforestationResult.value;
+    updateCardValue(8, String(d.lossMha));
+    updateCardTimestamp(8);
+    setLiveIndicator(8, true);
+  } else {
+    setLiveIndicator(8, false);
   }
 }
 
 function applyProxyData(data) {
   const g = data.global || {};
 
-  if (g.temperature && g.temperature.anomaly != null) {
-    const sign = g.temperature.anomaly >= 0 ? '+' : '';
-    updateCardValue(2, `${sign}${Number(g.temperature.anomaly).toFixed(2)}`);
+  if (g.temperature && g.temperature.land != null) {
+    const sign = g.temperature.land >= 0 ? '+' : '';
+    updateCardValue(2, `${sign}${Number(g.temperature.land).toFixed(2)}`);
     updateCardTimestamp(2);
     setLiveIndicator(2, true);
   } else {
+    updateCardValue(2, '—');
     setLiveIndicator(2, false);
   }
 
-  if (g.co2 && g.co2.ppm != null) {
-    updateCardValue(3, Number(g.co2.ppm).toFixed(1));
+  if (g.temperature && g.temperature.ocean != null) {
+    const sign = g.temperature.ocean >= 0 ? '+' : '';
+    updateCardValue(3, `${sign}${Number(g.temperature.ocean).toFixed(2)}`);
     updateCardTimestamp(3);
     setLiveIndicator(3, true);
   } else {
+    updateCardValue(3, '—');
     setLiveIndicator(3, false);
+  }
+
+  if (g.co2 && g.co2.ppm != null) {
+    updateCardValue(4, Number(g.co2.ppm).toFixed(1));
+    updateCardTimestamp(4);
+    setLiveIndicator(4, true);
+  } else {
+    setLiveIndicator(4, false);
+  }
+
+  updateCardValue(5, '\u2014');
+  setLiveIndicator(5, false);
+
+  if (g.renewable_energy && g.renewable_energy.pct != null) {
+    updateCardValue(6, Number(g.renewable_energy.pct).toFixed(1));
+    updateCardTimestamp(6);
+    setLiveIndicator(6, true);
+  } else {
+    setLiveIndicator(6, false);
+  }
+
+  if (g.carbon_footprint && g.carbon_footprint.per_capita != null) {
+    updateCardValue(7, String(g.carbon_footprint.per_capita));
+    updateCardTimestamp(7);
+    setLiveIndicator(7, true);
+  } else {
+    updateCardValue(7, '\u2014');
+    setLiveIndicator(7, false);
+  }
+
+  if (g.deforestation && g.deforestation.lossMha != null) {
+    updateCardValue(8, String(g.deforestation.lossMha));
+    updateCardTimestamp(8);
+    setLiveIndicator(8, true);
+  } else {
+    updateCardValue(8, '\u2014');
+    setLiveIndicator(8, false);
   }
 
   cityData = data.cities || [];
@@ -309,8 +385,10 @@ export async function refreshAllData() {
       fetchAirQuality(),
       fetchGlobalTemperature(),
       fetchGlobalCO2(),
+      fetchRenewableEnergy(),
+      fetchDeforestation(),
     ]);
-    applyDirectResults(results[0], results[1], results[2]);
+    applyDirectResults(results[0], results[1], results[2], results[3], results[4]);
   }
 
   updateTimestamp();

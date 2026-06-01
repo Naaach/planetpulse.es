@@ -8,6 +8,7 @@ const PORT = process.env.PROXY_PORT || 3001;
 const OPEN_METEO_AQ = 'https://air-quality-api.open-meteo.com/v1/air-quality';
 const OPEN_METEO_WX = 'https://api.open-meteo.com/v1/forecast';
 const GLOBAL_WARMING = 'https://global-warming.org/api';
+const WORLD_BANK = 'https://api.worldbank.org/v2/country/1W/indicator';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const CITIES_JS = join(__dirname, '..', 'src', 'services', 'cities.js');
@@ -36,10 +37,44 @@ function corsHeaders() {
   };
 }
 
+async function fetchCarbonFootprintFromOWID() {
+  const url = 'https://ourworldindata.org/grapher/co-emissions-per-capita.csv?v=1&csvType=filtered&useColumnShortNames=true&format=csv';
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`OWID carbon: ${res.status}`);
+  const csv = await res.text();
+  const lines = csv.split('\n').filter(l => l.trim());
+  const headerLine = lines.find(l => /^"?((Country)|(Entity))"?/i.test(l));
+  if (!headerLine) throw new Error('No CSV header');
+  const headers = headerLine.split(',').map(h => h.replace(/^"|"$/g, '').trim());
+  const countryCol = headers.findIndex(h => /country|entity/i.test(h));
+  const yearCol = headers.findIndex(h => /year/i.test(h));
+  const valueCol = headers.findIndex(h => /co2|CO₂|emissions/i.test(h));
+  if (countryCol === -1 || yearCol === -1 || valueCol === -1) throw new Error('Columns not found');
+  const headerIdx = lines.indexOf(headerLine);
+  let latestYear = 0;
+  let latestValue = null;
+  for (let i = headerIdx + 1; i < lines.length; i++) {
+    const parts = lines[i].split(',');
+    const country = parts[countryCol]?.replace(/^"|"$/g, '');
+    if (country !== 'World') continue;
+    const year = parseInt(parts[yearCol], 10);
+    const val = parseFloat(parts[valueCol]);
+    if (!isNaN(year) && !isNaN(val) && year > latestYear) {
+      latestYear = year;
+      latestValue = val;
+    }
+  }
+  if (latestValue == null) throw new Error('No World carbon data');
+  return { per_capita: Number(latestValue.toFixed(3)), year: latestYear };
+}
+
 async function fetchAllData() {
-  const [tempResult, co2Result] = await Promise.allSettled([
+  const [tempResult, co2Result, carbonResult, deforestationResult, renewableResult] = await Promise.allSettled([
     fetch(`${GLOBAL_WARMING}/temperature-api`),
     fetch(`${GLOBAL_WARMING}/co2-api`),
+    fetchCarbonFootprintFromOWID(),
+    fetch(`${WORLD_BANK}/AG.LND.FRST.K2?format=json&per_page=20&sort=year:desc`),
+    fetch(`${WORLD_BANK}/EG.ELC.RNEW.ZS?format=json&per_page=20&sort=year:desc`),
   ]);
 
   const data = { timestamp: Date.now(), global: {}, cities: [] };
@@ -49,7 +84,8 @@ async function fetchAllData() {
       const body = await tempResult.value.json();
       const arr = body.result;
       if (arr && arr.length) {
-        data.global.temperature = { anomaly: arr[arr.length - 1].land_ocean };
+        const t = arr[arr.length - 1];
+        data.global.temperature = { land: t.land, ocean: t.ocean || null };
       }
     } catch {}
   }
@@ -60,6 +96,36 @@ async function fetchAllData() {
       const arr = body.co2;
       if (arr && arr.length) {
         data.global.co2 = { ppm: arr[arr.length - 1].trend || arr[arr.length - 1].average };
+      }
+    } catch {}
+  }
+
+  if (carbonResult.status === 'fulfilled') {
+    data.global.carbon_footprint = carbonResult.value;
+  }
+
+  if (deforestationResult.status === 'fulfilled' && deforestationResult.value.ok) {
+    try {
+      const body = await deforestationResult.value.json();
+      if (body[1]?.length >= 2) {
+        const entries = body[1].filter(e => e.value != null).map(e => ({ value: e.value, year: e.date }));
+        if (entries.length >= 2) {
+          const curr = entries[0].value;
+          const prev = entries[1].value;
+          data.global.deforestation = { lossMha: Math.round(((prev - curr) / 10000) * 10) / 10 };
+        }
+      }
+    } catch {}
+  }
+
+  if (renewableResult.status === 'fulfilled' && renewableResult.value.ok) {
+    try {
+      const body = await renewableResult.value.json();
+      if (body[1]?.length) {
+        const entry = body[1].find(e => e.value != null);
+        if (entry) {
+          data.global.renewable_energy = { pct: Number(Number(entry.value).toFixed(1)) };
+        }
       }
     } catch {}
   }

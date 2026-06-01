@@ -27,7 +27,7 @@ const {
 const flecha = tendencia === 'up' ? '\u2191' : tendencia === 'down' ? '\u2193' : '\u2192';
 const etiquetaES = tendencia === 'up' ? 'Al alza' : tendencia === 'down' ? 'A la baja' : 'Estable';
 const etiquetaEN = tendencia === 'up' ? 'Rising' : tendencia === 'down' ? 'Declining' : 'Stable';
-const porcentajeDisplay = trendText || (porcentaje >= 0 ? `+${porcentaje}%` : `${porcentaje}%`);
+const porcentajeDisplay = trendText || (porcentaje != null ? (porcentaje >= 0 ? `+${porcentaje}%` : `${porcentaje}%`) : '\u2014');
 
 const colorMap = {
   bueno: { text: 'text-green-700', badge: 'bg-green-100 text-green-700' },
